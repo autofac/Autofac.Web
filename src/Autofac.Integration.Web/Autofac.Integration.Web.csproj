@@ -47,6 +47,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -54,6 +55,9 @@
     <CodeAnalysisDictionary Include="..\..\CodeAnalysisDictionary.xml">
       <Link>CodeAnalysisDictionary.xml</Link>
     </CodeAnalysisDictionary>
+    <Compile Include="Configuration\AutofacWebFormsIntegrationSection.cs" />
+    <Compile Include="Configuration\ContainerProviderModuleElement.cs" />
+    <Compile Include="Configuration\ContainerProviderModuleElementCollection.cs" />
     <Compile Include="Forms\AttributedInjection.cs" />
     <Compile Include="Forms\AttributedInjectionModule.cs" />
     <Compile Include="ContainerDisposalModule.cs" />
@@ -64,6 +68,7 @@
     </Compile>
     <Compile Include="ContainerProvider.cs" />
     <Compile Include="ContainerProviderContainer.cs" />
+    <Compile Include="Forms\ContainerProviderAccessorConstraint.cs" />
     <Compile Include="Forms\DependencyInjectionAttribute.cs" />
     <Compile Include="Forms\DependencyInjectionModule.cs" />
     <Compile Include="Forms\DependencyInjectionModuleResources.Designer.cs">
@@ -71,6 +76,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DependencyInjectionModuleResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ModuleBase.cs" />
     <Compile Include="IContainerProvider.cs" />
     <Compile Include="IContainerProviderAccessor.cs" />
     <Compile Include="Forms\IInjectionBehavior.cs" />

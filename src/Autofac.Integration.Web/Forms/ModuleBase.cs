@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -12,16 +13,11 @@ namespace Autofac.Integration.Web.Forms
     /// </summary>
     public abstract class ModuleBase
     {
-        /// <summary>
-        /// Current appllication
-        /// </summary>
-        protected HttpApplication httpApplication;
+      
+        private HttpApplication _httpApplication;
+        private IEnumerable<ContainerProviderAccessorConstraint> _containerProviderAccessors;
 
-        /// <summary>
-        /// ContainerProviderAccessor's and namespace prefixes applicable to them
-        /// </summary>
-        protected IEnumerable<ContainerProviderAccessorConstraint> containerProviderAccessors;
-        const string SECTION_NAME = "Autofac.Integration.Web";
+        const string SECTION_NAME = "autofac.integration.web";
 
         /// <summary>
         /// Populates ContainerProviderAccessor's and namespace prefixes from application
@@ -40,7 +36,25 @@ namespace Autofac.Integration.Web.Forms
                 AddApplicationContainerProviderAccessor(context, accesssors);
             }
 
-            containerProviderAccessors = accesssors;
+            _containerProviderAccessors = accesssors;
+        }
+
+        /// <summary>
+        /// ContainerProviderAccessor's and namespace prefixes applicable to them
+        /// </summary>
+        protected IEnumerable<ContainerProviderAccessorConstraint> ContainerProviderAccessors
+        {
+            get { return _containerProviderAccessors; }
+            set { _containerProviderAccessors = value; }
+        }
+
+        /// <summary>
+        /// Current appllication
+        /// </summary>
+        protected HttpApplication HttpApplication
+        {
+            get { return _httpApplication; }
+            set { _httpApplication = value; }
         }
 
         private static void AddModuleContainerProviderAccessors(HttpApplication context, List<ContainerProviderAccessorConstraint> accesssors, AutofacWebFormsIntegrationSection section)
@@ -49,12 +63,12 @@ namespace Autofac.Integration.Web.Forms
             {
                 var httpModule = context.Modules[moduleElement.Name];
                 if (httpModule == null)
-                    throw new InvalidOperationException(string.Format(DependencyInjectionModuleResources.HttpModuleMustExitInApplication,
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,DependencyInjectionModuleResources.HttpModuleMustExitInApplication,
                         moduleElement.Name));
 
                 var containerProviderAccessor = httpModule as IContainerProviderAccessor;
                 if (containerProviderAccessor == null)
-                    throw new InvalidOperationException(string.Format(DependencyInjectionModuleResources.ModuleMustImplementAccessor,
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,DependencyInjectionModuleResources.ModuleMustImplementAccessor,
                         moduleElement.Name));
                 if (string.IsNullOrEmpty(moduleElement.InjectionNamespaceRegex) && accesssors.Any())
                     throw new InvalidOperationException(DependencyInjectionModuleResources.RegexMustBeSpecified);
@@ -67,7 +81,7 @@ namespace Autofac.Integration.Web.Forms
             }
         }
 
-        private void AddApplicationContainerProviderAccessor(HttpApplication context, List<ContainerProviderAccessorConstraint> constraints)
+        private static void AddApplicationContainerProviderAccessor(HttpApplication context, List<ContainerProviderAccessorConstraint> constraints)
         {
 
             var containerProviderAccessor = context as IContainerProviderAccessor;

@@ -112,15 +112,27 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplicationMustImplementAccessor" xml:space="preserve">
     <value>This module requires that the HttpApplication (Global Application Class) implements IContainerProviderAccessor.</value>
   </data>
   <data name="ContainerProviderNull" xml:space="preserve">
     <value>IContainerProviderAccessor.ContainerProvider returned null, which is invalid. If the container provider belongs to the HttpApplication subclass, ensure that it is a static variable.</value>
+  </data>
+  <data name="HttpModuleMustExitInApplication" xml:space="preserve">
+    <value>Http module named {0} must exit in HttpApplication.Modules collection</value>
+  </data>
+  <data name="ModuleMustImplementAccessor" xml:space="preserve">
+    <value>Autofac WebForms integration requires that the {0} module  implements IContainerProviderAccessor.</value>
+  </data>
+  <data name="RegexMustBeSpecified" xml:space="preserve">
+    <value>InjectionNamespaceRegex must be specified if more then one IContainerProviderAccessor module configured</value>
+  </data>
+  <data name="RegexMustBeUnique" xml:space="preserve">
+    <value>InjectionNamespaceRegex must be unique for each configured IContainerProviderAccessor module</value>
   </data>
 </root>

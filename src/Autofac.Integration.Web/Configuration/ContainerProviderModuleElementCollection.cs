@@ -22,6 +22,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 
@@ -31,9 +32,17 @@ namespace Autofac.Integration.Web.Configuration
     /// Collection for hosting module configuration elements
     /// </summary>
     [ConfigurationCollection(typeof(ContainerProviderModuleElement), AddItemName = MODULE)]
-    public class ContainerProviderModuleElementCollection: ConfigurationElementCollection
+    public sealed class ContainerProviderModuleElementCollection: ConfigurationElementCollection,ICollection<ContainerProviderModuleElement>
     {
         private const string MODULE = "module";
+
+        bool ICollection<ContainerProviderModuleElement>.IsReadOnly
+        {
+            get
+            {
+                return IsReadOnly();
+            }
+        }
 
         /// <summary>
         /// Creates new element
@@ -84,5 +93,59 @@ namespace Autofac.Integration.Web.Configuration
             }
         }
 
+        /// <summary>
+        /// Adds element to collection
+        /// </summary>
+        /// <param name="item"></param>
+        public void Add(ContainerProviderModuleElement item)
+        {
+            BaseAdd(item);
+        }
+
+        /// <summary>
+        /// Clears collection
+        /// </summary>
+        public void Clear()
+        {
+            BaseClear();
+        }
+
+        /// <summary>
+        /// Inicated whether collection contains element 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool Contains(ContainerProviderModuleElement item)
+        {
+            return BaseIndexOf(item) != -1;
+        }
+
+        /// <summary>
+        ///  CopyTo copies a collection into an Array, starting at a particular
+        /// index into the array
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        public void CopyTo(ContainerProviderModuleElement[] array, int arrayIndex)
+        {
+            base.CopyTo(array, arrayIndex);
+        }
+
+        
+        /// <summary>
+        /// Removes element from collection
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>If item was in collection</returns>
+        public bool Remove(ContainerProviderModuleElement item)
+        {
+           
+            if (BaseIndexOf(item)!=-1)
+            {
+                BaseRemove(item);
+                return true;
+            }
+            return false;
+        }
     }
 }

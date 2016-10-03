@@ -31,7 +31,7 @@ namespace Autofac.Integration.Web.Configuration
     /// </summary>
     public class AutofacWebFormsIntegrationSection:ConfigurationSection
     {
-        const string MODULES_PROP_ANME = "ContainerProviderModules";
+        const string MODULES_PROP_ANME = "containerProviderModules";
 
         /// <summary>
         /// Modules that implement IContainerProviderAccessor

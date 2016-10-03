@@ -22,8 +22,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using Autofac.Integration.Web.Forms;
 using System;
 using System.Web;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Autofac.Integration.Web
 {
@@ -31,9 +34,9 @@ namespace Autofac.Integration.Web
     /// HTTP Module that disposes of Autofac-created components when processing for
     /// a request completes.
     /// </summary>
-    public class ContainerDisposalModule : IHttpModule
+    public class ContainerDisposalModule :ModuleBase, IHttpModule
     {
-        IContainerProviderAccessor _containerProviderAccessor;
+      
 
         /// <summary>
         /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule"/>.
@@ -51,10 +54,9 @@ namespace Autofac.Integration.Web
             if (context == null)
                 throw new ArgumentNullException("context");
 
-            _containerProviderAccessor = context as IContainerProviderAccessor;
-            if (_containerProviderAccessor == null)
-                throw new InvalidOperationException(ContainerDisposalModuleResources.ApplicationMustImplementAccessor);
-
+            HttpApplication = context;
+            AddContainerProviderAccessors(context);
+        
             context.EndRequest += OnEndRequest;
         }
 
@@ -65,10 +67,20 @@ namespace Autofac.Integration.Web
         /// <param name="e"></param>
         void OnEndRequest(object sender, EventArgs e)
         {
-            var cp = _containerProviderAccessor.ContainerProvider;
-            if (cp == null)
-                throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
-            cp.EndRequestLifetime();
+            var handler = HttpApplication.Context.CurrentHandler;
+            if (handler != null && handler.GetType().BaseType!=null)
+            {
+                var typeName = handler.GetType().BaseType.FullName;
+                var accessor = ContainerProviderAccessors
+                    .FirstOrDefault(c => string.IsNullOrEmpty(c.NamespaceRegexPattern) || Regex.IsMatch(typeName, c.NamespaceRegexPattern));
+                if (accessor != null)
+                {
+                    var cp = accessor.ProviderAccessor.ContainerProvider;
+                    if (cp == null)
+                        throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
+                    cp.EndRequestLifetime();
+                }
+            }
         }
     }
 }

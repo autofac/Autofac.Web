@@ -32,8 +32,8 @@ namespace Autofac.Integration.Web.Configuration
     /// </summary>
     public class ContainerProviderModuleElement :ConfigurationElement
     {
-        const string NAME_PROP_NAME = "Name";
-        const string INJECTION_NAMESPACE_REGEX_PROP_NAME = "InjectionNamespaceRegex";
+        const string NAME_PROP_NAME = "name";
+        const string INJECTION_NAMESPACE_REGEX_PROP_NAME = "injectionNamespaceRegex";
 
         /// <summary>
         /// Name of http module that implements IContainerProviderAccessor 
