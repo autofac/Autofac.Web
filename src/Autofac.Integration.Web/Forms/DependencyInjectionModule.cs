@@ -33,12 +33,12 @@ namespace Autofac.Integration.Web.Forms
     /// <summary>
     /// Base for classes that inject dependencies into HTTP Handlers.
     /// </summary>
-    public abstract class DependencyInjectionModule :ModuleBase, IHttpModule
+    public abstract class DependencyInjectionModule : ModuleBase, IHttpModule
     {
 
 
-       
-     
+
+
         IInjectionBehavior _noInjection = new NoInjection();
         IInjectionBehavior _propertyInjection = new PropertyInjection();
         IInjectionBehavior _unsetPropertyInjection = new UnsetPropertyInjection();
@@ -64,7 +64,7 @@ namespace Autofac.Integration.Web.Forms
             context.PreRequestHandlerExecute += OnPreRequestHandlerExecute;
         }
 
-      
+
 
         /// <summary>
         /// Called before the request handler is executed so that dependencies
@@ -76,12 +76,12 @@ namespace Autofac.Integration.Web.Forms
         {
             var handler = HttpApplication.Context.CurrentHandler;
 
-            if (handler != null && handler.GetType().BaseType!=null)
+            if (handler != null)
             {
                 var typeName = handler.GetType().BaseType.FullName;
                 var constraint = ContainerProviderAccessors
                     .FirstOrDefault(c => string.IsNullOrEmpty(c.NamespaceRegexPattern) || Regex.IsMatch(typeName, c.NamespaceRegexPattern));
-                if (constraint!=null)
+                if (constraint != null)
                 {
                     var injectionBehavior = GetInjectionBehavior(handler);
                     var cp = constraint.ProviderAccessor.ContainerProvider;

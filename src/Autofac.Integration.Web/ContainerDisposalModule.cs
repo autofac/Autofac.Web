@@ -34,9 +34,9 @@ namespace Autofac.Integration.Web
     /// HTTP Module that disposes of Autofac-created components when processing for
     /// a request completes.
     /// </summary>
-    public class ContainerDisposalModule :ModuleBase, IHttpModule
+    public class ContainerDisposalModule : ModuleBase, IHttpModule
     {
-      
+
 
         /// <summary>
         /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule"/>.
@@ -56,7 +56,7 @@ namespace Autofac.Integration.Web
 
             HttpApplication = context;
             AddContainerProviderAccessors(context);
-        
+
             context.EndRequest += OnEndRequest;
         }
 
@@ -68,7 +68,7 @@ namespace Autofac.Integration.Web
         void OnEndRequest(object sender, EventArgs e)
         {
             var handler = HttpApplication.Context.CurrentHandler;
-            if (handler != null && handler.GetType().BaseType!=null)
+            if (handler != null)
             {
                 var typeName = handler.GetType().BaseType.FullName;
                 var accessor = ContainerProviderAccessors
