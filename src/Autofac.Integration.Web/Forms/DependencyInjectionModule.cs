@@ -24,6 +24,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Autofac.Integration.Web.Forms
@@ -31,10 +33,12 @@ namespace Autofac.Integration.Web.Forms
     /// <summary>
     /// Base for classes that inject dependencies into HTTP Handlers.
     /// </summary>
-    public abstract class DependencyInjectionModule : IHttpModule
+    public abstract class DependencyInjectionModule : ModuleBase, IHttpModule
     {
-        IContainerProviderAccessor _containerProviderAccessor;
-        HttpApplication _httpApplication;
+
+
+
+
         IInjectionBehavior _noInjection = new NoInjection();
         IInjectionBehavior _propertyInjection = new PropertyInjection();
         IInjectionBehavior _unsetPropertyInjection = new UnsetPropertyInjection();
@@ -55,14 +59,12 @@ namespace Autofac.Integration.Web.Forms
             if (context == null)
                 throw new ArgumentNullException("context");
 
-            _httpApplication = context;
-            _containerProviderAccessor = context as IContainerProviderAccessor;
-
-            if (_containerProviderAccessor == null)
-                throw new InvalidOperationException(DependencyInjectionModuleResources.ApplicationMustImplementAccessor);
-
+            HttpApplication = context;
+            AddContainerProviderAccessors(context);
             context.PreRequestHandlerExecute += OnPreRequestHandlerExecute;
         }
+
+
 
         /// <summary>
         /// Called before the request handler is executed so that dependencies
@@ -72,14 +74,21 @@ namespace Autofac.Integration.Web.Forms
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void OnPreRequestHandlerExecute(object sender, EventArgs e)
         {
-            var handler = _httpApplication.Context.CurrentHandler;
+            var handler = HttpApplication.Context.CurrentHandler;
+
             if (handler != null)
             {
-                var injectionBehavior = GetInjectionBehavior(handler);
-                var cp = _containerProviderAccessor.ContainerProvider;
-                if (cp == null)
-                    throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
-                injectionBehavior.InjectDependencies(cp.RequestLifetime, handler);
+                var typeName = handler.GetType().BaseType.FullName;
+                var constraint = ContainerProviderAccessors
+                    .FirstOrDefault(c => string.IsNullOrEmpty(c.NamespaceRegexPattern) || Regex.IsMatch(typeName, c.NamespaceRegexPattern));
+                if (constraint != null)
+                {
+                    var injectionBehavior = GetInjectionBehavior(handler);
+                    var cp = constraint.ProviderAccessor.ContainerProvider;
+                    if (cp == null)
+                        throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
+                    injectionBehavior.InjectDependencies(cp.RequestLifetime, handler);
+                }
             }
         }
 
