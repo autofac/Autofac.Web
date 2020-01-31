@@ -1,22 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\Autofac.snk</AssemblyOriginatorKeyFile>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <TargetFramework>net461</TargetFramework>
-    <AssemblyTitle>Autofac.Integration.Web.Test</AssemblyTitle>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <NoWarn>$(NoWarn);CS1591;SA1602;SA1611</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Autofac.Integration.Web.Test</AssemblyName>
+    <AssemblyOriginatorKeyFile>../../Autofac.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <CodeAnalysisRuleSet>../../build/Analyzers.ruleset</CodeAnalysisRuleSet>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.1.0" />
-    <PackageReference Include="xunit.abstractions" Version="2.0.0" />
-    <PackageReference Include="xunit.assert" Version="2.1.0" />
-    <PackageReference Include="xunit.core" Version="2.1.0" />
-    <PackageReference Include="xunit.extensibility.core" Version="2.1.0" />
-    <PackageReference Include="xunit.extensibility.execution" Version="2.1.0" />
-    <PackageReference Include="xunit.runner.console" Version="2.1.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web" />

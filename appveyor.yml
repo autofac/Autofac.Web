@@ -1,17 +1,28 @@
-image:
-  - Visual Studio 2019
-
 version: 5.0.0.{build}
 
 configuration: Release
 
-before_build:
-- nuget restore
+image: Visual Studio 2019
 
-build:
-  verbosity: minimal
-  publish_nuget: true
-  publish_nuget_symbols: true
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  NUGET_XMLDOC_MODE: skip
+
+skip_tags: true
+
+nuget:
+  disable_publish_on_pr: true
+
+clone_depth: 1
+
+test: off
+
+build_script:
+- ps: .\build.ps1
+
+artifacts:
+- path: artifacts\packages\**\*.nupkg
+  name: MyGet
 
 deploy:
 - provider: NuGet
@@ -20,3 +31,4 @@ deploy:
     secure: rCUEY75fXN0wxtMy6QL4jCrLdaYbxIBzIXWeN+wEu/XDpyqimzreOc5AH5jMd5ah
   skip_symbols: true
   symbol_server: https://www.myget.org/F/autofac/symbols/api/v2/package
+  artifact: MyGet

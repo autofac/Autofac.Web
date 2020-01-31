@@ -37,12 +37,12 @@ namespace Autofac.Integration.Web
         void EndRequestLifetime();
 
         /// <summary>
-        /// The global, application-wide container.
+        /// Gets the global, application-wide container.
         /// </summary>
         ILifetimeScope ApplicationContainer { get; }
 
         /// <summary>
-        /// The lifetime used to manage components for processing the
+        /// Gets the lifetime used to manage components for processing the
         /// current request.
         /// </summary>
         ILifetimeScope RequestLifetime { get; }

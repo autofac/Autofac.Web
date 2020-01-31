@@ -33,8 +33,8 @@ namespace Autofac.Integration.Web
     /// </summary>
     public class ContainerProvider : IContainerProvider
     {
-        readonly IContainer _applicationContainer;
-        readonly Action<ContainerBuilder> _requestLifetimeConfiguration;
+        private readonly IContainer _applicationContainer;
+        private readonly Action<ContainerBuilder> _requestLifetimeConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerProvider"/> class.
@@ -42,8 +42,7 @@ namespace Autofac.Integration.Web
         /// <param name="applicationContainer">The application container.</param>
         public ContainerProvider(IContainer applicationContainer)
         {
-            if (applicationContainer == null) throw new ArgumentNullException("applicationContainer");
-            _applicationContainer = applicationContainer;
+            _applicationContainer = applicationContainer ?? throw new ArgumentNullException(nameof(applicationContainer));
         }
 
         /// <summary>
@@ -56,8 +55,7 @@ namespace Autofac.Integration.Web
         public ContainerProvider(IContainer applicationContainer, Action<ContainerBuilder> requestLifetimeConfiguration)
             : this(applicationContainer)
         {
-            if (requestLifetimeConfiguration == null) throw new ArgumentNullException("requestLifetimeConfiguration");
-            _requestLifetimeConfiguration = requestLifetimeConfiguration;
+            _requestLifetimeConfiguration = requestLifetimeConfiguration ?? throw new ArgumentNullException(nameof(requestLifetimeConfiguration));
         }
 
         /// <summary>
@@ -72,9 +70,8 @@ namespace Autofac.Integration.Web
         }
 
         /// <summary>
-        /// The global, application-wide container.
+        /// Gets the global, application-wide container.
         /// </summary>
-        /// <value></value>
         public ILifetimeScope ApplicationContainer
         {
             get
@@ -84,10 +81,9 @@ namespace Autofac.Integration.Web
         }
 
         /// <summary>
-        /// The container used to manage components for processing the
+        /// Gets the container used to manage components for processing the
         /// current request.
         /// </summary>
-        /// <value></value>
         public ILifetimeScope RequestLifetime
         {
             get
@@ -106,12 +102,13 @@ namespace Autofac.Integration.Web
             }
         }
 
-        static ILifetimeScope AmbientRequestLifetime
+        private static ILifetimeScope AmbientRequestLifetime
         {
             get
             {
                 return (ILifetimeScope)HttpContext.Current.Items[typeof(ILifetimeScope)];
             }
+
             set
             {
                 HttpContext.Current.Items[typeof(ILifetimeScope)] = value;

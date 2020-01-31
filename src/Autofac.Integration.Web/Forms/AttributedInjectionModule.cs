@@ -44,11 +44,9 @@ namespace Autofac.Integration.Web.Forms
         protected override IInjectionBehavior GetInjectionBehaviorForHandlerType(Type handlerType)
         {
             if (handlerType == null)
-                throw new ArgumentNullException("handlerType");
+                throw new ArgumentNullException(nameof(handlerType));
 
             return _attributedInjection;
         }
     }
 }
-
-

@@ -32,7 +32,7 @@ namespace Autofac.Integration.Web.Forms
     /// decorated with the [InjectProperties] or [InjectUnsetProperties]
     /// attributes.
     /// </summary>
-    class AttributedInjection : PageInjectionBehavior
+    internal class AttributedInjection : PageInjectionBehavior
     {
         /// <summary>
         /// Override to return a closure that injects properties into a target.
@@ -42,7 +42,7 @@ namespace Autofac.Integration.Web.Forms
         protected override Func<object, object> GetInjector(IComponentContext context)
         {
             if (context == null)
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
 
             return target =>
                        {
@@ -63,5 +63,3 @@ namespace Autofac.Integration.Web.Forms
         }
     }
 }
-
-

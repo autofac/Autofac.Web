@@ -31,7 +31,7 @@ namespace Autofac.Integration.Web.Forms
     /// <summary>
     /// Assists with the construction of page injectors.
     /// </summary>
-    abstract class PageInjectionBehavior : IInjectionBehavior
+    internal abstract class PageInjectionBehavior : IInjectionBehavior
     {
         /// <summary>
         /// Inject dependencies in the required fashion.
@@ -41,10 +41,10 @@ namespace Autofac.Integration.Web.Forms
         public void InjectDependencies(IComponentContext context, object target)
         {
             if (context == null)
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
 
             if (target == null)
-                throw new ArgumentNullException("target");
+                throw new ArgumentNullException(nameof(target));
 
             var injector = GetInjector(context);
 
@@ -66,38 +66,34 @@ namespace Autofac.Integration.Web.Forms
         private static void DoInjection(Func<object, object> injector, object target)
         {
             if (injector == null)
-                throw new ArgumentNullException("injector");
+                throw new ArgumentNullException(nameof(injector));
 
             if (target == null)
-                throw new ArgumentNullException("target");
+                throw new ArgumentNullException(nameof(target));
 
             injector(target);
 
-            var page = target as Page;
-            if (page != null)
+            if (target is Page page)
                 page.PreLoad += (s, e) => InjectUserControls(injector, page);
         }
 
-        static void InjectUserControls(Func<object, object> injector, Control parent)
+        private static void InjectUserControls(Func<object, object> injector, Control parent)
         {
             if (injector == null)
-                throw new ArgumentNullException("injector");
+                throw new ArgumentNullException(nameof(injector));
 
             if (parent == null)
-                throw new ArgumentNullException("parent");
+                throw new ArgumentNullException(nameof(parent));
 
             if (parent.Controls == null)
                 return;
 
             foreach (Control control in parent.Controls)
             {
-                var uc = control as UserControl;
-                if (uc != null)
+                if (control is UserControl uc)
                     injector(uc);
                 InjectUserControls(injector, control);
             }
         }
     }
 }
-
-

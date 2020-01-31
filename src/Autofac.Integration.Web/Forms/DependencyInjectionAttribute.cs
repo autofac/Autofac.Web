@@ -33,12 +33,5 @@ namespace Autofac.Integration.Web.Forms
     [AttributeUsage(AttributeTargets.Class)]
     public abstract class DependencyInjectionAttribute : Attribute
     {
-        ///// <summary>
-        ///// If true, targets that subclass Page will be searched for
-        ///// child controls that
-        ///// </summary>
-        //public bool InjectChildControls { get; set; }
     }
 }
-
-

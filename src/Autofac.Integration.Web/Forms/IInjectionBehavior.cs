@@ -38,5 +38,3 @@ namespace Autofac.Integration.Web.Forms
         void InjectDependencies(IComponentContext context, object target);
     }
 }
-
-

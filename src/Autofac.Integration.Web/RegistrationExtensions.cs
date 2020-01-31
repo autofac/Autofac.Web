@@ -41,8 +41,8 @@ namespace Autofac.Integration.Web
         /// HTTP request.
         /// </summary>
         /// <typeparam name="TLimit">Registration limit type.</typeparam>
-        /// <typeparam name="TStyle">Registration style.</typeparam>
         /// <typeparam name="TActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TStyle">Registration style.</typeparam>
         /// <param name="registration">The registration to configure.</param>
         /// <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
         /// <returns>A registration builder allowing further configuration of the component.</returns>
@@ -66,8 +66,8 @@ namespace Autofac.Integration.Web
         /// other services.
         /// </remarks>
         /// <typeparam name="TLimit">Registration limit type.</typeparam>
-        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <typeparam name="TActivatorData">Activator data type.</typeparam>
+        /// <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
         /// <param name="registration">The registration to configure.</param>
         /// <returns>A registration builder allowing further configuration of the component.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "It is the responsibility of the registry to dispose of registrations.")]
@@ -77,7 +77,7 @@ namespace Autofac.Integration.Web
             where TActivatorData : IConcreteActivatorData
             where TSingleRegistrationStyle : SingleRegistrationStyle
         {
-            if (registration == null) throw new ArgumentNullException("registration");
+            if (registration == null) throw new ArgumentNullException(nameof(registration));
 
             var services = registration.RegistrationData.Services.ToArray();
             registration.RegistrationData.ClearServices();
@@ -99,6 +99,7 @@ namespace Autofac.Integration.Web
                                 session[key] = result;
                             }
                         }
+
                         return result;
                     })
                     .As(services)

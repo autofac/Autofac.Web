@@ -35,5 +35,3 @@ namespace Autofac.Integration.Web.Forms
     {
     }
 }
-
-

@@ -33,10 +33,10 @@ namespace Autofac.Integration.Web
     /// </summary>
     public class ContainerDisposalModule : IHttpModule
     {
-        IContainerProviderAccessor _containerProviderAccessor;
+        private IContainerProviderAccessor _containerProviderAccessor;
 
         /// <summary>
-        /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule"/>.
+        /// Disposes of the resources (other than memory) used by the module that implements <see cref="System.Web.IHttpModule"/>.
         /// </summary>
         public void Dispose()
         {
@@ -45,11 +45,11 @@ namespace Autofac.Integration.Web
         /// <summary>
         /// Initializes a module and prepares it to handle requests.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.Web.HttpApplication"/> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application</param>
+        /// <param name="context">An <see cref="System.Web.HttpApplication"/> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application.</param>
         public void Init(HttpApplication context)
         {
             if (context == null)
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
 
             _containerProviderAccessor = context as IContainerProviderAccessor;
             if (_containerProviderAccessor == null)
@@ -61,9 +61,7 @@ namespace Autofac.Integration.Web
         /// <summary>
         /// Dispose of the per-request container.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnEndRequest(object sender, EventArgs e)
+        private void OnEndRequest(object sender, EventArgs e)
         {
             var cp = _containerProviderAccessor.ContainerProvider;
             if (cp == null)

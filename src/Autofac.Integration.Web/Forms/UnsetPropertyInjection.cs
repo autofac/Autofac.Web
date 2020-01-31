@@ -30,7 +30,7 @@ namespace Autofac.Integration.Web.Forms
     /// <summary>
     /// Injects resolvable properties that do not already have a value.
     /// </summary>
-    class UnsetPropertyInjection: PageInjectionBehavior
+    internal class UnsetPropertyInjection : PageInjectionBehavior
     {
         /// <summary>
         /// Override to return a closure that injects properties into a target.
@@ -40,11 +40,9 @@ namespace Autofac.Integration.Web.Forms
         protected override Func<object, object> GetInjector(IComponentContext context)
         {
             if (context == null)
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
 
             return context.InjectUnsetProperties<object>;
         }
     }
 }
-
-

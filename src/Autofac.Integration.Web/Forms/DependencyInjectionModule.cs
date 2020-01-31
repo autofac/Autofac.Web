@@ -33,14 +33,11 @@ namespace Autofac.Integration.Web.Forms
     /// </summary>
     public abstract class DependencyInjectionModule : IHttpModule
     {
-        IContainerProviderAccessor _containerProviderAccessor;
-        HttpApplication _httpApplication;
-        IInjectionBehavior _noInjection = new NoInjection();
-        IInjectionBehavior _propertyInjection = new PropertyInjection();
-        IInjectionBehavior _unsetPropertyInjection = new UnsetPropertyInjection();
+        private IContainerProviderAccessor _containerProviderAccessor;
+        private HttpApplication _httpApplication;
 
         /// <summary>
-        /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule"/>.
+        /// Disposes of the resources (other than memory) used by the module that implements <see cref="System.Web.IHttpModule"/>.
         /// </summary>
         public void Dispose()
         {
@@ -49,13 +46,10 @@ namespace Autofac.Integration.Web.Forms
         /// <summary>
         /// Initializes a module and prepares it to handle requests.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.Web.HttpApplication"/> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application</param>
+        /// <param name="context">An <see cref="System.Web.HttpApplication"/> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application.</param>
         public void Init(HttpApplication context)
         {
-            if (context == null)
-                throw new ArgumentNullException("context");
-
-            _httpApplication = context;
+            _httpApplication = context ?? throw new ArgumentNullException(nameof(context));
             _containerProviderAccessor = context as IContainerProviderAccessor;
 
             if (_containerProviderAccessor == null)
@@ -70,7 +64,7 @@ namespace Autofac.Integration.Web.Forms
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        void OnPreRequestHandlerExecute(object sender, EventArgs e)
+        private void OnPreRequestHandlerExecute(object sender, EventArgs e)
         {
             var handler = _httpApplication.Context.CurrentHandler;
             if (handler != null)
@@ -86,16 +80,16 @@ namespace Autofac.Integration.Web.Forms
         /// <summary>
         /// Internal for testability outside of a web application.
         /// </summary>
-        /// <param name="handler"></param>
+        /// <param name="handler">The handler on which to inject dependencies.</param>
         /// <returns>The injection behavior.</returns>
         protected internal IInjectionBehavior GetInjectionBehavior(IHttpHandler handler)
         {
             if (handler == null)
-                throw new ArgumentNullException("handler");
+                throw new ArgumentNullException(nameof(handler));
 
             if (handler is DefaultHttpHandler)
             {
-                return _noInjection;
+                return NoInjection;
             }
             else
             {
@@ -105,28 +99,19 @@ namespace Autofac.Integration.Web.Forms
         }
 
         /// <summary>
-        /// A behavior that does not inject dependencies.
+        /// Gets a behavior that does not inject dependencies.
         /// </summary>
-        protected IInjectionBehavior NoInjection
-        {
-            get { return _noInjection; }
-        }
+        protected IInjectionBehavior NoInjection { get; } = new NoInjection();
 
         /// <summary>
-        /// A behavior that injects resolvable dependencies.
+        /// Gets a behavior that injects resolvable dependencies.
         /// </summary>
-        protected IInjectionBehavior PropertyInjection
-        {
-            get { return _propertyInjection; }
-        }
+        protected IInjectionBehavior PropertyInjection { get; } = new PropertyInjection();
 
         /// <summary>
-        /// A behavior that injects unset, resolvable dependencies.
+        /// Gets a behavior that injects unset, resolvable dependencies.
         /// </summary>
-        protected IInjectionBehavior UnsetPropertyInjection
-        {
-            get { return _unsetPropertyInjection; }
-        }
+        protected IInjectionBehavior UnsetPropertyInjection { get; } = new UnsetPropertyInjection();
 
         /// <summary>
         /// Override to customize injection behavior based on HTTP Handler type.
@@ -136,5 +121,3 @@ namespace Autofac.Integration.Web.Forms
         protected abstract IInjectionBehavior GetInjectionBehaviorForHandlerType(Type handlerType);
     }
 }
-
-

@@ -46,19 +46,16 @@ namespace Autofac.Integration.Web
         private readonly IContainerProvider _containerProvider;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Autofac.Integration.Web.ContainerProviderContainer"/>.
+        /// Initializes a new instance of the <see cref="Autofac.Integration.Web.ContainerProviderContainer"/> class.
         /// </summary>
         /// <param name="containerProvider">The <see cref="IContainerProvider"/> to use to retrieve the current request container.</param>
         public ContainerProviderContainer(IContainerProvider containerProvider)
         {
-            if (containerProvider == null)
-                throw new ArgumentNullException("containerProvider");
-
-            _containerProvider = containerProvider;
+            _containerProvider = containerProvider ?? throw new ArgumentNullException(nameof(containerProvider));
         }
 
         /// <summary>
-        /// Associates services with the components that provide them.
+        /// Gets the registry that associates services with the components that provide them.
         /// </summary>
         public IComponentRegistry ComponentRegistry
         {
@@ -127,7 +124,7 @@ namespace Autofac.Integration.Web
         }
 
         /// <summary>
-        /// The disposer associated with this <see cref="ILifetimeScope"/>.
+        /// Gets the disposer associated with this <see cref="ILifetimeScope"/>.
         /// Component instances can be associated with it manually if required.
         /// </summary>
         /// <remarks>Typical usage does not require interaction with this member- it
@@ -138,7 +135,7 @@ namespace Autofac.Integration.Web
         }
 
         /// <summary>
-        /// The tag applied to the <see cref="ILifetimeScope"/>.
+        /// Gets the tag applied to the <see cref="ILifetimeScope"/>.
         /// </summary>
         /// <remarks>Tags allow a level in the lifetime hierarchy to be identified.
         /// In most applications, tags are not necessary.</remarks>
@@ -207,7 +204,7 @@ namespace Autofac.Integration.Web
         /// </summary>
         public ValueTask DisposeAsync()
         {
-            return default(ValueTask);
+            return default;
         }
     }
 }

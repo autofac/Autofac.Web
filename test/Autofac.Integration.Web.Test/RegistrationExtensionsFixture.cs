@@ -8,7 +8,9 @@ namespace Autofac.Integration.Web.Test
 {
     public class RegistrationExtensionsFixture
     {
-        private interface ICounter { }
+        private interface ICounter
+        {
+        }
 
         private class Counter : ICounter
         {
@@ -19,6 +21,7 @@ namespace Autofac.Integration.Web.Test
                 Constructed++;
             }
         }
+
         public static HttpContext FakeHttpContext()
         {
             // source: https://stackoverflow.com/a/10126711/6887257
@@ -27,14 +30,20 @@ namespace Autofac.Integration.Web.Test
             var httpResponse = new HttpResponse(stringWriter);
             var httpContext = new HttpContext(httpRequest, httpResponse);
 
-            var sessionContainer = new HttpSessionStateContainer("id", new SessionStateItemCollection(),
-                new HttpStaticObjectsCollection(), 10, true,
+            var sessionContainer = new HttpSessionStateContainer(
+                "id",
+                new SessionStateItemCollection(),
+                new HttpStaticObjectsCollection(),
+                10,
+                true,
                 HttpCookieMode.AutoDetect,
-                SessionStateMode.InProc, false);
+                SessionStateMode.InProc,
+                false);
 
             httpContext.Items["AspSession"] = typeof(HttpSessionState).GetConstructor(
                     BindingFlags.NonPublic | BindingFlags.Instance,
-                    null, CallingConventions.Standard,
+                    null,
+                    CallingConventions.Standard,
                     new[] { typeof(HttpSessionStateContainer) },
                     null)
                 .Invoke(new object[] { sessionContainer });
@@ -59,7 +68,6 @@ namespace Autofac.Integration.Web.Test
                 scope.Resolve<Counter>();
                 Assert.Equal(1, Counter.Constructed);
             }
-
 
             HttpContext.Current = FakeHttpContext();
             using (var scope = container.BeginLifetimeScope())

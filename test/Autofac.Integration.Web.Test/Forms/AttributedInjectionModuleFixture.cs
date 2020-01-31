@@ -7,10 +7,10 @@ namespace Autofac.Integration.Web.Test.Forms
 {
     public class AttributedInjectionModuleFixture
     {
-        const string ContextSuppliedString = "ContextSuppliedString";
-        const string ExplicitlyProvidedString = "ExplicitlyProvidedString";
+        private const string ContextSuppliedString = "ContextSuppliedString";
+        private const string ExplicitlyProvidedString = "ExplicitlyProvidedString";
 
-        class HttpHandler : IHttpHandler
+        private class HttpHandler : IHttpHandler
         {
             public bool IsReusable
             {
@@ -24,18 +24,18 @@ namespace Autofac.Integration.Web.Test.Forms
         }
 
         [InjectProperties]
-        class PropertyInjectedPage : HttpHandler
+        private class PropertyInjectedPage : HttpHandler
         {
             public string Property { get; set; }
         }
 
         [InjectUnsetProperties]
-        class UnsetPropertyInjectedPage : HttpHandler
+        private class UnsetPropertyInjectedPage : HttpHandler
         {
             public string Property { get; set; }
         }
 
-        class NonInjectedPage : HttpHandler
+        private class NonInjectedPage : HttpHandler
         {
             public string Property { get; set; }
         }
@@ -56,8 +56,10 @@ namespace Autofac.Integration.Web.Test.Forms
         public void PropertyInjectedValueSet()
         {
             var context = CreateContext();
-            var page = new PropertyInjectedPage();
-            page.Property = ExplicitlyProvidedString;
+            var page = new PropertyInjectedPage
+            {
+                Property = ExplicitlyProvidedString,
+            };
             var target = new AttributedInjectionModule();
             var injector = target.GetInjectionBehavior(page);
             Assert.NotNull(injector);
@@ -81,8 +83,10 @@ namespace Autofac.Integration.Web.Test.Forms
         public void PropertyNotInjectedWhenValueSet()
         {
             var context = CreateContext();
-            var page = new UnsetPropertyInjectedPage();
-            page.Property = ExplicitlyProvidedString;
+            var page = new UnsetPropertyInjectedPage
+            {
+                Property = ExplicitlyProvidedString,
+            };
             var target = new AttributedInjectionModule();
             var injector = target.GetInjectionBehavior(page);
             Assert.NotNull(injector);
