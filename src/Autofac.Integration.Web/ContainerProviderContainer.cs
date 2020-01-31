@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Core.Lifetime;
@@ -180,16 +181,15 @@ namespace Autofac.Integration.Web
         /// <summary>
         /// Resolve an instance of the provided registration within the context.
         /// </summary>
-        /// <param name="registration">The registration.</param>
-        /// <param name="parameters">Parameters for the instance.</param>
+        /// <param name="request">The resolve request.</param>
         /// <returns>
         /// The component instance.
         /// </returns>
         /// <exception cref="ComponentNotRegisteredException"/>
         /// <exception cref="Autofac.Core.DependencyResolutionException"/>
-        public object ResolveComponent(IComponentRegistration registration, IEnumerable<Parameter> parameters)
+        public object ResolveComponent(ResolveRequest request)
         {
-            return _containerProvider.RequestLifetime.ResolveComponent(registration, parameters);
+            return _containerProvider.RequestLifetime.ResolveComponent(request);
         }
 
         /// <summary>
@@ -199,6 +199,15 @@ namespace Autofac.Integration.Web
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposing of this wrapper container should not result in the whole application container being disposed.")]
         public void Dispose()
         {
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources asynchronously.
+        /// </summary>
+        public ValueTask DisposeAsync()
+        {
+            return default(ValueTask);
         }
     }
 }
