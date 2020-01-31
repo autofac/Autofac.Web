@@ -84,18 +84,19 @@ namespace Autofac.Integration.Web
 
             return registration
                 .ExternallyOwned()
-                .OnRegistered(e => e.ComponentRegistry.Register(RegistrationBuilder
+                .OnRegistered(e => e.ComponentRegistryBuilder.Register(RegistrationBuilder
                     .ForDelegate((c, p) =>
                     {
                         var session = HttpContext.Current.Session;
                         object result;
                         lock (session.SyncRoot)
                         {
-                            result = session[e.ComponentRegistration.Id.ToString()];
+                            var key = e.ComponentRegistration.Id.ToString();
+                            result = session[key];
                             if (result == null)
                             {
-                                result = c.ResolveComponent(e.ComponentRegistration, p);
-                                session[e.ComponentRegistration.Id.ToString()] = result;
+                                result = c.ResolveComponent(new ResolveRequest(null, e.ComponentRegistration, p));
+                                session[key] = result;
                             }
                         }
                         return result;
