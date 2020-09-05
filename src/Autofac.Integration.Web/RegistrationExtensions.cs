@@ -28,6 +28,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web;
 using Autofac.Builder;
+using Autofac.Core;
+using Autofac.Core.Resolving.Pipeline;
 
 namespace Autofac.Integration.Web
 {
@@ -84,28 +86,34 @@ namespace Autofac.Integration.Web
 
             return registration
                 .ExternallyOwned()
-                .OnRegistered(e => e.ComponentRegistryBuilder.Register(RegistrationBuilder
-                    .ForDelegate((c, p) =>
+                .OnRegistered(e =>
+                {
+                    foreach (var service in services)
                     {
-                        var session = HttpContext.Current.Session;
-                        object result;
-                        lock (session.SyncRoot)
-                        {
-                            var key = e.ComponentRegistration.Id.ToString();
-                            result = session[key];
-                            if (result == null)
+                        e.ComponentRegistryBuilder.Register(RegistrationBuilder
+                            .ForDelegate((c, p) =>
                             {
-                                result = c.ResolveComponent(new ResolveRequest(null, e.ComponentRegistration, p));
-                                session[key] = result;
-                            }
-                        }
+                                var session = HttpContext.Current.Session;
+                                object result;
+                                lock (session.SyncRoot)
+                                {
+                                    result = session[e.ComponentRegistration.Id.ToString()];
+                                    if (result == null)
+                                    {
+                                        var resolveRequest = new ResolveRequest(service, new ServiceRegistration(ServicePipelines.DefaultServicePipeline, e.ComponentRegistration), p);
+                                        result = c.ResolveComponent(resolveRequest);
+                                        session[e.ComponentRegistration.Id.ToString()] = result;
+                                    }
+                                }
 
-                        return result;
-                    })
-                    .As(services)
-                    .InstancePerLifetimeScope()
-                    .ExternallyOwned()
-                    .CreateRegistration()));
+                                return result;
+                            })
+                            .As(service)
+                            .InstancePerLifetimeScope()
+                            .ExternallyOwned()
+                            .CreateRegistration());
+                    }
+                });
         }
     }
 }

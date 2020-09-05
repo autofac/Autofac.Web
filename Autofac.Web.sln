@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autofac.Integration.Web", "src\Autofac.Integration.Web\Autofac.Integration.Web.csproj", "{4BDD9D14-BACA-416C-919E-E9FF100F8F5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Integration.Web", "src\Autofac.Integration.Web\Autofac.Integration.Web.csproj", "{4BDD9D14-BACA-416C-919E-E9FF100F8F5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autofac.Integration.Web.Test", "test\Autofac.Integration.Web.Test\Autofac.Integration.Web.Test.csproj", "{929BAA80-5ED7-484B-81C8-A4ACC9FF2009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac.Integration.Web.Test", "test\Autofac.Integration.Web.Test\Autofac.Integration.Web.Test.csproj", "{929BAA80-5ED7-484B-81C8-A4ACC9FF2009}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA98653E-FF8F-4A09-BF29-95E75AE8D1EC}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		global.json = global.json
+		NuGet.Config = NuGet.Config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83BEE27E-2D19-4D28-9184-08C38520A907}
 	EndGlobalSection
 EndGlobal

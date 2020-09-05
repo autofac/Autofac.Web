@@ -65,6 +65,9 @@ namespace Autofac.Integration.Web
             }
         }
 
+        /// <inheritdoc />
+        public DiagnosticListener DiagnosticSource => _containerProvider.ApplicationContainer.DiagnosticSource;
+
         /// <summary>
         /// Begin a new nested scope. Component instances created via the new scope
         /// will be disposed along with it.
