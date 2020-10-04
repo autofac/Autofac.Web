@@ -33,7 +33,6 @@ namespace Autofac.Integration.Web
     /// </summary>
     public class ContainerProvider : IContainerProvider
     {
-        private readonly IContainer _applicationContainer;
         private readonly Action<ContainerBuilder> _requestLifetimeConfiguration;
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace Autofac.Integration.Web
         /// <param name="applicationContainer">The application container.</param>
         public ContainerProvider(IContainer applicationContainer)
         {
-            _applicationContainer = applicationContainer ?? throw new ArgumentNullException(nameof(applicationContainer));
+            ApplicationContainer = applicationContainer ?? throw new ArgumentNullException(nameof(applicationContainer));
         }
 
         /// <summary>
@@ -72,13 +71,7 @@ namespace Autofac.Integration.Web
         /// <summary>
         /// Gets the global, application-wide container.
         /// </summary>
-        public ILifetimeScope ApplicationContainer
-        {
-            get
-            {
-                return _applicationContainer;
-            }
-        }
+        public IContainer ApplicationContainer { get; }
 
         /// <summary>
         /// Gets the container used to manage components for processing the
