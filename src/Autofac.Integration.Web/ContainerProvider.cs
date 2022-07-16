@@ -23,8 +23,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Web;
 using System.Threading.Tasks;
+using System.Web;
 using Autofac.Core.Lifetime;
 
 namespace Autofac.Integration.Web
