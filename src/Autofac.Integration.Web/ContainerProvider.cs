@@ -24,8 +24,8 @@
 
 using System;
 using System.Web;
-using Autofac.Core.Lifetime;
 using System.Threading.Tasks;
+using Autofac.Core.Lifetime;
 
 namespace Autofac.Integration.Web
 {
