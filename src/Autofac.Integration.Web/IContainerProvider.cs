@@ -22,6 +22,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Threading.Tasks;
+
 namespace Autofac.Integration.Web
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace Autofac.Integration.Web
         /// Dispose of the current request's container, if it has been
         /// instantiated.
         /// </summary>
-        void EndRequestLifetime();
+        ValueTask EndRequestLifetime();
 
         /// <summary>
         /// Gets the global, application-wide container.

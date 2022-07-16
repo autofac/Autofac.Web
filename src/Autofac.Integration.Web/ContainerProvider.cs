@@ -25,6 +25,7 @@
 using System;
 using System.Web;
 using Autofac.Core.Lifetime;
+using System.Threading.Tasks;
 
 namespace Autofac.Integration.Web
 {
@@ -61,11 +62,10 @@ namespace Autofac.Integration.Web
         /// Dispose of the current request's container, if it has been
         /// instantiated.
         /// </summary>
-        public void EndRequestLifetime()
+        public ValueTask EndRequestLifetime()
         {
             var rc = AmbientRequestLifetime;
-            if (rc != null)
-                rc.Dispose();
+            return rc == null ? default : rc.DisposeAsync();
         }
 
         /// <summary>
