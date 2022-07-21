@@ -23,6 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Autofac.Integration.Web
@@ -55,18 +56,35 @@ namespace Autofac.Integration.Web
             if (_containerProviderAccessor == null)
                 throw new InvalidOperationException(ContainerDisposalModuleResources.ApplicationMustImplementAccessor);
 
-            context.EndRequest += OnEndRequest;
+            var wrapper = new EventHandlerTaskAsyncHelper(OnEndRequest);
+
+            context.AddOnEndRequestAsync(wrapper.BeginEventHandler, wrapper.EndEventHandler);
         }
 
         /// <summary>
         /// Dispose of the per-request container.
         /// </summary>
-        private void OnEndRequest(object sender, EventArgs e)
+        private Task OnEndRequest(object sender, EventArgs e)
         {
             var cp = _containerProviderAccessor.ContainerProvider;
             if (cp == null)
                 throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
-            cp.EndRequestLifetime();
+
+            var valueTask = cp.EndRequestLifetime();
+
+            // https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ValueTaskExtensions/ValueTaskExtensions.cs#L13
+
+            // Try to avoid the allocation from AsTask
+            if (valueTask.IsCompletedSuccessfully)
+            {
+                // Signal consumption to the IValueTaskSource
+                valueTask.GetAwaiter().GetResult();
+                return Task.CompletedTask;
+            }
+            else
+            {
+                return valueTask.AsTask();
+            }
         }
     }
 }
