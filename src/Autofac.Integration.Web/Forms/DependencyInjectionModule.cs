@@ -1,27 +1,5 @@
-﻿// This software is part of the Autofac IoC container
-// Copyright © 2011 Autofac Contributors
-// https://autofac.org
-//
-// Permission is hereby granted, free of charge, to any person
-// obtaining a copy of this software and associated documentation
-// files (the "Software"), to deal in the Software without
-// restriction, including without limitation the rights to use,
-// copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following
-// conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-// OTHER DEALINGS IN THE SOFTWARE.
+﻿// Copyright (c) Autofac Project. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System;
 using System.Web;
@@ -33,8 +11,8 @@ namespace Autofac.Integration.Web.Forms
     /// </summary>
     public abstract class DependencyInjectionModule : IHttpModule
     {
-        private IContainerProviderAccessor _containerProviderAccessor;
-        private HttpApplication _httpApplication;
+        private IContainerProviderAccessor? _containerProviderAccessor;
+        private HttpApplication? _httpApplication;
 
         /// <summary>
         /// Disposes of the resources (other than memory) used by the module that implements <see cref="System.Web.IHttpModule"/>.
@@ -53,7 +31,9 @@ namespace Autofac.Integration.Web.Forms
             _containerProviderAccessor = context as IContainerProviderAccessor;
 
             if (_containerProviderAccessor == null)
+            {
                 throw new InvalidOperationException(DependencyInjectionModuleResources.ApplicationMustImplementAccessor);
+            }
 
             context.PreRequestHandlerExecute += OnPreRequestHandlerExecute;
         }
@@ -66,13 +46,16 @@ namespace Autofac.Integration.Web.Forms
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnPreRequestHandlerExecute(object sender, EventArgs e)
         {
-            var handler = _httpApplication.Context.CurrentHandler;
+            var handler = _httpApplication?.Context.CurrentHandler;
             if (handler != null)
             {
                 var injectionBehavior = GetInjectionBehavior(handler);
-                var cp = _containerProviderAccessor.ContainerProvider;
+                var cp = _containerProviderAccessor?.ContainerProvider;
                 if (cp == null)
+                {
                     throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
+                }
+
                 injectionBehavior.InjectDependencies(cp.RequestLifetime, handler);
             }
         }
@@ -85,7 +68,9 @@ namespace Autofac.Integration.Web.Forms
         protected internal IInjectionBehavior GetInjectionBehavior(IHttpHandler handler)
         {
             if (handler == null)
+            {
                 throw new ArgumentNullException(nameof(handler));
+            }
 
             if (handler is DefaultHttpHandler)
             {

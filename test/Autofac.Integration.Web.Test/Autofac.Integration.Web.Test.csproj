@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
@@ -28,11 +27,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
   <ItemGroup>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\build\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Autofac.Integration.Web\Autofac.Integration.Web.csproj" />
   </ItemGroup>
