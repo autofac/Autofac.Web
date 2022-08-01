@@ -3,7 +3,7 @@
     {
       "args": [
         "build",
-        "${workspaceFolder}/Autofac.Configuration.sln",
+        "${workspaceFolder}/Autofac.Web.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
