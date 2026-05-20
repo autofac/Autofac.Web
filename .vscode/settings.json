@@ -10,8 +10,6 @@
     "unmanaged",
     "xunit"
   ],
-  "dotnet-test-explorer.runInParallel": true,
-  "dotnet-test-explorer.testProjectPath": "test/**/*.Test.csproj",
   "dotnet.defaultSolution": "Autofac.Web.sln",
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
