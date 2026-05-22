@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Autofac Project. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System.Reflection;
 using System.Web;
 using System.Web.SessionState;
 
@@ -25,8 +24,7 @@ public class RegistrationExtensionsFixture
 
     public static HttpContext FakeHttpContext()
     {
-        // source: https://stackoverflow.com/a/10126711/6887257
-        var httpRequest = new HttpRequest("", "http://stackoverflow/", "");
+        var httpRequest = new HttpRequest("", "http://localhost/", "");
         var stringWriter = new StringWriter();
         var httpResponse = new HttpResponse(stringWriter);
         var httpContext = new HttpContext(httpRequest, httpResponse);
@@ -41,13 +39,7 @@ public class RegistrationExtensionsFixture
             SessionStateMode.InProc,
             false);
 
-        httpContext.Items["AspSession"] = typeof(HttpSessionState).GetConstructor(
-                BindingFlags.NonPublic | BindingFlags.Instance,
-                null,
-                CallingConventions.Standard,
-                new[] { typeof(HttpSessionStateContainer) },
-                null)
-            .Invoke(new object[] { sessionContainer });
+        SessionStateUtility.AddHttpSessionStateToContext(httpContext, sessionContainer);
 
         return httpContext;
     }
