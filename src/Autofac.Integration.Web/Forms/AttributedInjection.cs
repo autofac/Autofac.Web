@@ -15,7 +15,7 @@ namespace Autofac.Integration.Web.Forms;
 internal class AttributedInjection : PageInjectionBehavior
 {
     // https://github.com/autofac/Autofac/blob/d2ed00a046c2d47374ee7a1517fabf2c4eb80c81/src/Autofac/Core/InternalReflectionCaches.cs#L86
-    private static readonly ConcurrentDictionary<Type, bool> HasRequiredMemberAttributeCache = ReflectionCacheSet.Shared
+    private static readonly ConcurrentDictionary<Type, bool> _hasRequiredMemberAttributeCache = ReflectionCacheSet.Shared
         .GetOrCreateCache<ReflectionCacheDictionary<Type, bool>>(nameof(HasRequiredMemberAttribute));
 
     /// <summary>
@@ -58,7 +58,7 @@ internal class AttributedInjection : PageInjectionBehavior
         // The RequiredMemberAttribute (may)* have Inherit = false on its AttributeUsage options,
         // so walk the tree.
         // (*): see `HasRequiredMemberAttribute` doc for why we dont really know much about the concrete attribute.
-        return HasRequiredMemberAttributeCache.GetOrAdd(type, t =>
+        return _hasRequiredMemberAttributeCache.GetOrAdd(type, t =>
         {
             for (var currentType = t; currentType != null && currentType != typeof(object); currentType = currentType.BaseType)
             {

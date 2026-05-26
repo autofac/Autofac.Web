@@ -15,7 +15,10 @@ public class AttributedInjectionModuleFixture
     {
         public bool IsReusable
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public void ProcessRequest(HttpContext context)
@@ -27,23 +30,35 @@ public class AttributedInjectionModuleFixture
     [InjectProperties]
     private class PropertyInjectedPage : HttpHandler
     {
-        public string Property { get; set; }
+        public string Property
+        {
+            get; set;
+        }
     }
 
     [InjectUnsetProperties]
     private class UnsetPropertyInjectedPage : HttpHandler
     {
-        public string Property { get; set; }
+        public string Property
+        {
+            get; set;
+        }
     }
 
     private class RequiredMemberInjectedPage : HttpHandler
     {
-        public required string Property { get; set; }
+        public required string Property
+        {
+            get; set;
+        }
     }
 
     private class NonInjectedPage : HttpHandler
     {
-        public string Property { get; set; }
+        public string Property
+        {
+            get; set;
+        }
     }
 
     [Fact]

@@ -10,19 +10,26 @@ namespace Autofac.Integration.Web;
 public interface IContainerProvider
 {
     /// <summary>
-    /// Dispose of the current request's container, if it has been
-    /// instantiated.
-    /// </summary>
-    ValueTask EndRequestLifetime();
-
-    /// <summary>
     /// Gets the global, application-wide container.
     /// </summary>
-    IContainer ApplicationContainer { get; }
+    IContainer ApplicationContainer
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the lifetime used to manage components for processing the
     /// current request.
     /// </summary>
-    ILifetimeScope RequestLifetime { get; }
+    ILifetimeScope RequestLifetime
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Dispose of the current request's container, if it has been
+    /// instantiated.
+    /// </summary>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+    ValueTask EndRequestLifetime();
 }

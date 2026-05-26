@@ -38,19 +38,12 @@ public class ContainerProvider : IContainerProvider
     }
 
     /// <summary>
-    /// Dispose of the current request's container, if it has been
-    /// instantiated.
-    /// </summary>
-    public ValueTask EndRequestLifetime()
-    {
-        var rc = AmbientRequestLifetime;
-        return rc == null ? default : rc.DisposeAsync();
-    }
-
-    /// <summary>
     /// Gets the global, application-wide container.
     /// </summary>
-    public IContainer ApplicationContainer { get; }
+    public IContainer ApplicationContainer
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets the container used to manage components for processing the
@@ -63,9 +56,9 @@ public class ContainerProvider : IContainerProvider
             var result = AmbientRequestLifetime;
             if (result == null)
             {
-                result = _requestLifetimeConfiguration == null ?
-                    ApplicationContainer.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag) :
-                    ApplicationContainer.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag, _requestLifetimeConfiguration);
+                result = _requestLifetimeConfiguration == null
+                    ? ApplicationContainer.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag)
+                    : ApplicationContainer.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag, _requestLifetimeConfiguration);
 
                 AmbientRequestLifetime = result;
             }
@@ -85,5 +78,16 @@ public class ContainerProvider : IContainerProvider
         {
             HttpContext.Current.Items[typeof(ILifetimeScope)] = value;
         }
+    }
+
+    /// <summary>
+    /// Dispose of the current request's container, if it has been
+    /// instantiated.
+    /// </summary>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+    public ValueTask EndRequestLifetime()
+    {
+        var rc = AmbientRequestLifetime;
+        return rc == null ? default : rc.DisposeAsync();
     }
 }

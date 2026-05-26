@@ -32,11 +32,7 @@ public class ContainerDisposalModule : IHttpModule
             throw new ArgumentNullException(nameof(context));
         }
 
-        _containerProviderAccessor = context as IContainerProviderAccessor;
-        if (_containerProviderAccessor == null)
-        {
-            throw new InvalidOperationException(ContainerDisposalModuleResources.ApplicationMustImplementAccessor);
-        }
+        _containerProviderAccessor = context as IContainerProviderAccessor ?? throw new InvalidOperationException(ContainerDisposalModuleResources.ApplicationMustImplementAccessor);
 
         var wrapper = new EventHandlerTaskAsyncHelper(OnEndRequest);
 
@@ -49,11 +45,7 @@ public class ContainerDisposalModule : IHttpModule
     [SuppressMessage("CA1849", "CA1849", Justification = "If the value task is already completed, getting the result synchronously isn't a problem.")]
     private Task OnEndRequest(object sender, EventArgs e)
     {
-        var cp = _containerProviderAccessor?.ContainerProvider;
-        if (cp == null)
-        {
-            throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
-        }
+        var cp = _containerProviderAccessor?.ContainerProvider ?? throw new InvalidOperationException(ContainerDisposalModuleResources.ContainerProviderNull);
 
         var valueTask = cp.EndRequestLifetime();
 
