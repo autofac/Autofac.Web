@@ -31,6 +31,54 @@ public class ContainerProviderContainer : IContainer
     }
 
     /// <summary>
+    /// Fired when a new scope based on the current scope is beginning.
+    /// </summary>
+    public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning
+    {
+        add
+        {
+            _containerProvider.RequestLifetime.ChildLifetimeScopeBeginning += value;
+        }
+
+        remove
+        {
+            _containerProvider.RequestLifetime.ChildLifetimeScopeBeginning -= value;
+        }
+    }
+
+    /// <summary>
+    /// Fired when this scope is ending.
+    /// </summary>
+    public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding
+    {
+        add
+        {
+            _containerProvider.RequestLifetime.CurrentScopeEnding += value;
+        }
+
+        remove
+        {
+            _containerProvider.RequestLifetime.CurrentScopeEnding -= value;
+        }
+    }
+
+    /// <summary>
+    /// Fired when a resolve operation is beginning in this scope.
+    /// </summary>
+    public event EventHandler<ResolveOperationBeginningEventArgs> ResolveOperationBeginning
+    {
+        add
+        {
+            _containerProvider.RequestLifetime.ResolveOperationBeginning += value;
+        }
+
+        remove
+        {
+            _containerProvider.RequestLifetime.ResolveOperationBeginning -= value;
+        }
+    }
+
+    /// <summary>
     /// Gets the registry that associates services with the components that provide them.
     /// </summary>
     public IComponentRegistry ComponentRegistry
@@ -41,8 +89,36 @@ public class ContainerProviderContainer : IContainer
         }
     }
 
+    /// <summary>
+    /// Gets the disposer associated with this <see cref="ILifetimeScope"/>.
+    /// Component instances can be associated with it manually if required.
+    /// </summary>
+    /// <remarks>Typical usage does not require interaction with this member- it
+    /// is used when extending the container.</remarks>
+    public IDisposer Disposer
+    {
+        get
+        {
+            return _containerProvider.RequestLifetime.Disposer;
+        }
+    }
+
     /// <inheritdoc />
     public DiagnosticListener DiagnosticSource => _containerProvider.ApplicationContainer.DiagnosticSource;
+
+    /// <summary>
+    /// Gets the tag applied to the <see cref="ILifetimeScope"/>.
+    /// </summary>
+    /// <remarks>Tags allow a level in the lifetime hierarchy to be identified.
+    /// In most applications, tags are not necessary.</remarks>
+    /// <seealso cref="IRegistrationBuilder{TLimit,TActivatorData,TRegistrationStyle}.InstancePerMatchingLifetimeScope"/>
+    public object Tag
+    {
+        get
+        {
+            return _containerProvider.RequestLifetime.Tag;
+        }
+    }
 
     /// <summary>
     /// Begin a new nested scope. Component instances created via the new scope
@@ -103,66 +179,14 @@ public class ContainerProviderContainer : IContainer
     }
 
     /// <summary>
-    /// Gets the disposer associated with this <see cref="ILifetimeScope"/>.
-    /// Component instances can be associated with it manually if required.
-    /// </summary>
-    /// <remarks>Typical usage does not require interaction with this member- it
-    /// is used when extending the container.</remarks>
-    public IDisposer Disposer
-    {
-        get { return _containerProvider.RequestLifetime.Disposer; }
-    }
-
-    /// <summary>
-    /// Gets the tag applied to the <see cref="ILifetimeScope"/>.
-    /// </summary>
-    /// <remarks>Tags allow a level in the lifetime hierarchy to be identified.
-    /// In most applications, tags are not necessary.</remarks>
-    /// <seealso cref="IRegistrationBuilder{TLimit,TActivatorData,TRegistrationStyle}.InstancePerMatchingLifetimeScope"/>
-    public object Tag
-    {
-        get
-        {
-            return _containerProvider.RequestLifetime.Tag;
-        }
-    }
-
-    /// <summary>
-    /// Fired when a new scope based on the current scope is beginning.
-    /// </summary>
-    public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning
-    {
-        add { _containerProvider.RequestLifetime.ChildLifetimeScopeBeginning += value; }
-        remove { _containerProvider.RequestLifetime.ChildLifetimeScopeBeginning -= value; }
-    }
-
-    /// <summary>
-    /// Fired when this scope is ending.
-    /// </summary>
-    public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding
-    {
-        add { _containerProvider.RequestLifetime.CurrentScopeEnding += value; }
-        remove { _containerProvider.RequestLifetime.CurrentScopeEnding -= value; }
-    }
-
-    /// <summary>
-    /// Fired when a resolve operation is beginning in this scope.
-    /// </summary>
-    public event EventHandler<ResolveOperationBeginningEventArgs> ResolveOperationBeginning
-    {
-        add { _containerProvider.RequestLifetime.ResolveOperationBeginning += value; }
-        remove { _containerProvider.RequestLifetime.ResolveOperationBeginning -= value; }
-    }
-
-    /// <summary>
     /// Resolve an instance of the provided registration within the context.
     /// </summary>
     /// <param name="request">The resolve request.</param>
     /// <returns>
     /// The component instance.
     /// </returns>
-    /// <exception cref="ComponentNotRegisteredException"/>
-    /// <exception cref="Autofac.Core.DependencyResolutionException"/>
+    /// <exception cref="ComponentNotRegisteredException">Thrown when the requested component is not registered.</exception>
+    /// <exception cref="Autofac.Core.DependencyResolutionException">Thrown when there is an error during dependency resolution.</exception>
     public object ResolveComponent(in ResolveRequest request)
     {
         return _containerProvider.RequestLifetime.ResolveComponent(request);
@@ -180,6 +204,7 @@ public class ContainerProviderContainer : IContainer
     /// Performs application-defined tasks associated with freeing, releasing, or
     /// resetting unmanaged resources asynchronously.
     /// </summary>
+    /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);

@@ -14,7 +14,10 @@ public class RegistrationExtensionsFixture
 
     private class Counter : ICounter
     {
-        public static int Constructed { get; private set; }
+        public static int Constructed
+        {
+            get; private set;
+        }
 
         public Counter()
         {

@@ -13,5 +13,8 @@ public interface IContainerProviderAccessor
     /// Gets the container provider.
     /// </summary>
     /// <value>The container provider.</value>
-    IContainerProvider ContainerProvider { get; }
+    IContainerProvider ContainerProvider
+    {
+        get;
+    }
 }
