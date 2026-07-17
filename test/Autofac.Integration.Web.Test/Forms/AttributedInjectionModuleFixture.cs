@@ -30,7 +30,7 @@ public class AttributedInjectionModuleFixture
     [InjectProperties]
     private class PropertyInjectedPage : HttpHandler
     {
-        public string Property
+        public string? Property
         {
             get; set;
         }
@@ -39,7 +39,7 @@ public class AttributedInjectionModuleFixture
     [InjectUnsetProperties]
     private class UnsetPropertyInjectedPage : HttpHandler
     {
-        public string Property
+        public string? Property
         {
             get; set;
         }
@@ -55,7 +55,7 @@ public class AttributedInjectionModuleFixture
 
     private class NonInjectedPage : HttpHandler
     {
-        public string Property
+        public string? Property
         {
             get; set;
         }
