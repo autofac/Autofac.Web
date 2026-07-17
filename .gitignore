@@ -3,6 +3,7 @@
 
 # Project specific files
 artifacts/
+BenchmarkDotNet.Artifacts/
 
 # User-specific files
 *.suo
@@ -166,4 +167,4 @@ $RECYCLE.BIN/
 .DS_Store
 
 # JetBrains Rider
-.idea/
+.idea

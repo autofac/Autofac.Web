@@ -10,10 +10,30 @@
     "unmanaged",
     "xunit"
   ],
+  "coverage-gutters.coverageBaseDir": "artifacts/logs",
+  "coverage-gutters.coverageFileNames": [
+    "**/coverage.cobertura.xml"
+  ],
   "dotnet.defaultSolution": "Autofac.Web.sln",
+  "dotnet.unitTestDebuggingOptions": {
+    "enableStepFiltering": false,
+    "justMyCode": false,
+    "requireExactSource": false,
+    "sourceLinkOptions": {
+      "*": {
+        "enabled": true
+      }
+    },
+    "suppressJITOptimizations": true,
+    "symbolOptions": {
+      "searchNuGetOrgSymbolServer": true
+    }
+  },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "*.resx": "$(capture).*.resx, $(capture).designer.cs, $(capture).designer.vb"
   },
-  "omnisharp.enableEditorConfigSupport": true
+  "files.watcherExclude": {
+    "**/target": true
+  }
 }
